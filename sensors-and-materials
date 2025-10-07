@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<style xmlns="http://purl.org/net/xbiblio/csl" version="1.0"
+  class="in-text" name="Sensors and Materials (custom, bracketed numeric)"
+  page-range-format="minimal" demote-non-dropping-particle="sort-only"
+  default-locale="en-US">
+  <info>
+    <title>Sensors and Materials (custom, bracketed numeric)</title>
+    <id>http://www.citationstyles.org/styles/sensors-and-materials-custom-bracketed</id>
+    <link href="http://www.citationstyles.org/styles/sensors-and-materials-custom-bracketed" rel="self"/>
+    <author><name>Custom</name></author>
+    <category citation-format="numeric"/>
+    <category field="engineering"/>
+    <updated>2025-10-07T00:00:00+09:00</updated>
+    <rights license="http://creativecommons.org/licenses/by-sa/3.0/">
+      This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License
+    </rights>
+  </info>
+
+  <locale xml:lang="en">
+    <terms>
+      <term name="et-al">et al.</term>
+      <term name="edition">ed.</term>
+      <term name="page-range-delimiter">–</term>
+      <term name="accessed">accessed</term>
+      <term name="and">and</term>
+    </terms>
+  </locale>
+
+  <!-- 著者名：名の頭文字（ピリオド付き）+ 姓 -->
+  <macro name="authors">
+    <names variable="author">
+      <name initialize-with="." name-as-sort-order="given-family"
+            sort-separator=", " delimiter=", " delimiter-precedes-last="always" and="text"/>
+      <et-al term="et-al" prefix=", " />
+    </names>
+  </macro>
+
+  <macro name="year">
+    <date variable="issued" form="text">
+      <date-part name="year"/>
+    </date>
+  </macro>
+
+  <!-- 誌名は略称があれば優先 -->
+  <macro name="container-journal">
+    <choose>
+      <if variable="container-title-short">
+        <text variable="container-title-short"/>
+      </if>
+      <else>
+        <text variable="container-title"/>
+      </else>
+    </choose>
+  </macro>
+
+  <!-- ページは数字のみ -->
+  <macro name="pages">
+    <text variable="page"/>
+  </macro>
+
+  <macro name="doi">
+    <group delimiter="">
+      <text value=" https://doi.org/"/>
+      <text variable="DOI"/>
+    </group>
+  </macro>
+
+  <macro name="url-access">
+    <group delimiter=" ">
+      <text variable="URL"/>
+      <group prefix=" (" suffix=")">
+        <text term="accessed" text-case="lowercase"/>
+        <date variable="accessed" prefix=" ">
+          <date-part name="year"/>
+          <date-part name="month" prefix="-"/>
+          <date-part name="day" prefix="-"/>
+        </date>
+      </group>
+    </group>
+  </macro>
+
+  <!-- 本文中の引用：カッコ付きの通し番号（例：(1,2–4)） -->
+  <citation collapse="citation-number">
+    <sort><key variable="citation-number"/></sort>
+    <layout prefix="(" suffix=")" delimiter=", ">
+      <text variable="citation-number"/>
+    </layout>
+  </citation>
+
+  <!-- 参考文献：(1) 著者: 誌名略称 巻 (年) ページ. ＋ DOI/URL（任意）
+       ※ ジャーナル論文ではタイトルは表示しない -->
+  <bibliography et-al-min="7" et-al-use-first="6" second-field-align="flush">
+    <layout>
+      <text variable="citation-number" prefix="(" suffix=") "/>
+      <text macro="authors" suffix=": "/>
+      <choose>
+        <if type="article-journal">
+          <group delimiter=" ">
+            <text macro="container-journal"/>
+            <text variable="volume"/>
+            <group prefix=" (" suffix=")">
+              <text macro="year"/>
+            </group>
+            <text macro="pages"/>
+          </group>
+          <choose>
+            <if variable="DOI">
+              <text value="."/><text macro="doi"/><text value="."/>
+            </if>
+            <else-if variable="URL">
+              <text value="."/><text prefix=" " macro="url-access"/><text value="."/>
+            </else-if>
+            <else>
+              <text value="."/>
+            </else>
+          </choose>
+        </if>
+
+        <else-if type="book">
+          <group delimiter=" ">
+            <text variable="title"/>
+            <text variable="publisher" prefix=", "/>
+            <text variable="publisher-place"/>
+            <group prefix=" (" suffix=")"><text macro="year"/></group>
+          </group>
+          <text value="."/>
+        </else-if>
+
+        <else-if type="chapter paper-conference">
+          <group delimiter=" ">
+            <text variable="title"/>
+            <group prefix=", ">
+              <text term="in" text-case="capitalize-first" suffix=": "/>
+              <text variable="container-title"/>
+            </group>
+            <text variable="publisher" prefix=", "/>
+            <text variable="publisher-place" prefix=" "/>
+            <group prefix=" (" suffix=")"><text macro="year"/></group>
+            <text macro="pages" prefix=" "/>
+          </group>
+          <text value="."/>
+        </else-if>
+
+        <else-if type="speech">
+          <group delimiter=", ">
+            <text variable="title"/>
+            <text variable="event"/>
+            <text variable="event-place"/>
+            <text macro="year"/>
+            <text macro="pages"/>
+          </group>
+          <text value="."/>
+        </else-if>
+
+        <else>
+          <group delimiter=", ">
+            <text variable="title"/>
+            <text macro="container-journal"/>
+            <text macro="year"/>
+          </group>
+          <choose>
+            <if variable="DOI">
+              <text value="."/><text macro="doi"/><text value="."/>
+            </if>
+            <else-if variable="URL">
+              <text value="."/><text prefix=" " macro="url-access"/><text value="."/>
+            </else-if>
+            <else>
+              <text value="."/>
+            </else>
+          </choose>
+        </else>
+      </choose>
+    </layout>
+  </bibliography>
+</style>
